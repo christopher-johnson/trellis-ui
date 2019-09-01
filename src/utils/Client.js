@@ -62,7 +62,10 @@ class Client {
 
   async fetchQuads(url, headers) {
     const rdf = await fetch(url || this.url, { headers: headers }).then(res => res.text()).catch(err => '');
-    return rdf.length > 0 ? new Parser().parse(rdf) : [];
+    if (headers.accept === "text/turtle") {
+      return rdf.length > 0 ? new Parser().parse(rdf) : [];
+    }
+    return rdf;
   }
 
   async fetchContent(url) {
@@ -93,11 +96,17 @@ class Client {
       }))
   }
 
-  async fetchResource(url) {
-    return this.serializeQuads(await this.fetchQuads(url, {
-      accept: "text/turtle",
-      prefer: Prefer.representation(LDP.PreferMinimalContainer)
-    }));
+  async fetchResource(url, contentType) {
+    if (contentType === "application/ld+json") {
+      return await this.fetchQuads(url, {
+        accept: contentType,
+        prefer: Prefer.representation(LDP.PreferMinimalContainer)
+      })
+    } else {
+      return this.serializeQuads(await this.fetchQuads(url, {
+        accept: "text/turtle", prefer: Prefer.representation(LDP.PreferMinimalContainer)
+      }));
+    }
   }
 
   async fetchMembership(url) {

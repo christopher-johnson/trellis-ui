@@ -1,7 +1,7 @@
 import React from 'react'
 import Config from '../Config'
 
-const Versions = ({versions = [], identifier = '', onClick}) => (
+export const Versions = ({versions = [], identifier = '', onClick}) => (
   <section className="ldpList">
     { versions.length > 0 && <h2>Versions</h2> }
     <ul>
@@ -15,5 +15,3 @@ const Versions = ({versions = [], identifier = '', onClick}) => (
     </ul>
   </section>
 )
-
-export default Versions

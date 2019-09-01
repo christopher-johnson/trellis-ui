@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Membership = ({members = [], onClick}) => (
+export const Membership = ({members = [], onClick}) => (
   <section id="ldpMembership">
     { members.length > 0 && <h2>Member Resources</h2> }
     <ul>
@@ -10,5 +10,3 @@ const Membership = ({members = [], onClick}) => (
     </ul>
   </section>
 )
-
-export default Membership

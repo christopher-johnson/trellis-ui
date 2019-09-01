@@ -1,20 +1,11 @@
 import React, { Component } from 'react'
-import createBrowserHistory from 'history/createBrowserHistory'
+import {createBrowserHistory} from 'history'
 import '../assets/LdpApp.css'
 import Config from '../Config'
 import Client from '../utils/Client'
-import Header from './Header'
-import NavigationForm from './NavigationForm'
-import LdpType from './LdpType'
-import Resource from './Resource'
-import Versions from './Versions'
-import Audit from './Audit'
-import Containment from './Containment'
-import Membership from './Membership'
-import NonRDFSource from './NonRDFSource'
-import Alerts from './Alerts'
-import Modal from './Modal'
-import Editor from './Editor'
+import {Button, Grid} from '@material-ui/core';
+import {Header, LdpType, Resource, Versions, Audit, Containment, Membership, NonRDFSource, Alerts, Modal, Editor}   from '.'
+import ReactJson from 'react-json-view'
 import { LDP } from '../utils/Vocab'
 
 class App extends Component {
@@ -72,7 +63,7 @@ class App extends Component {
         this.setState(() => state);
       } else {
         Promise.all([
-          client.fetchResource(headers.description),
+          client.fetchResource(headers.description, Config.SERIALIZED_CONTENT_TYPE),
           client.fetchAudit(headers.description),
           client.fetchMembership(headers.description),
           client.fetchContainment(headers.description),
@@ -128,9 +119,6 @@ class App extends Component {
     }
   }
 
-  /**
-   * Handle a submit event.
-   */
   handleSubmit(identifier = '') {
     this.history.push('/', {id: identifier });
   }
@@ -153,26 +141,41 @@ class App extends Component {
    * React render.
    */
   render() {
+    const url = this.state.identifier ? Config.BASE_URL + this.state.identifier : Config.BASE_URL;
     return (
-      <div className="LdpApp">
-        <Header identifier={this.state.identifier}/>
-        <NavigationForm onSubmit={this.handleSubmit}/>
+      <Grid container>
+        <Header identifier={this.state.identifier} onSubmit={this.handleSubmit}/>
         <Alerts alert={this.state.err}/>
-        <div className="meta">
-          <LdpType types={this.state.types}/>
-          <Versions versions={this.state.mementos} identifier={this.state.identifier} onClick={this.resourceClick}/>
-          <Audit data={this.state.audit}/>
-          <Containment children={this.state.children} onClick={this.resourceClick}/>
-        </div>
-        <article>
-          <Resource data={this.state.resource} types={this.state.types} onClick={this.modifyClick}/>
-          <NonRDFSource identifier={this.state.identifier} content={this.state.content} contentType={this.state.contentType}/>
-          <Membership members={this.state.members} onClick={this.resourceClick}/>
-        </article>
-        <Modal>
-          <Editor identifier={this.state.identifier} action={this.state.action} types={this.state.types} onSubmit={this.handleEdit}/>
-        </Modal>
-      </div>
+        <Grid
+          container
+          spacing={3}
+        >
+          <Grid item style={{margin: 10}} xs>
+            <Button variant="contained" color="primary" href={url}>{url}</Button>
+            <LdpType types={this.state.types}/>
+            <Versions versions={this.state.mementos} identifier={this.state.identifier} onClick={this.resourceClick}/>
+            <Audit data={this.state.audit}/>
+            <Containment children={this.state.children} onClick={this.resourceClick}/>
+          </Grid>
+          <Grid item style={{margin: 10}} xs={8}>
+            <menu>
+              { this.state.types.includes(LDP.Container) && <i title="New Resource" onClick={() => this.modifyClick("CREATE")} className="fa fa-plus"/> }
+              <i title="Update Resource" onClick={() => this.modifyClick("UPDATE")} className="fa fa-cog"/>
+              <i title="Delete Resource" onClick={() => this.modifyClick("DELETE")} className="fa fa-times"/>
+            </menu>
+            <h2>Resource</h2>
+              {this.state.resource && Config.SERIALIZED_CONTENT_TYPE === "application/ld+json" ?
+                <ReactJson src={JSON.parse(this.state.resource)}/> :
+              <Resource data={this.state.resource}/>
+              }
+              <NonRDFSource identifier={this.state.identifier} content={this.state.content} contentType={this.state.contentType}/>
+              <Membership members={this.state.members} onClick={this.resourceClick}/>
+            <Modal>
+              <Editor identifier={this.state.identifier} action={this.state.action} types={this.state.types} onSubmit={this.handleEdit}/>
+            </Modal>
+          </Grid>
+        </Grid>
+      </Grid>
     );
   }
 }

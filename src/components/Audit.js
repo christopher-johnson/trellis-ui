@@ -1,7 +1,7 @@
 import React from 'react'
 import { AS } from '../utils/Vocab'
 
-const Audit = ({data = []}) => (
+export const Audit = ({data = []}) => (
   <section className="ldpList">
     { data.length > 0 && <h2>Audit Log</h2> }
     <ul>
@@ -10,5 +10,3 @@ const Audit = ({data = []}) => (
     </ul>
   </section>
 )
-
-export default Audit

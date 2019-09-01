@@ -3,7 +3,7 @@ import Client from '../utils/Client'
 import { LDP } from '../utils/Vocab'
 import Config from '../Config'
 
-class Editor extends React.Component {
+export class Editor extends React.Component {
 
   constructor(props, context) {
     super(props, context);
@@ -174,4 +174,3 @@ class Editor extends React.Component {
   }
 }
 
-export default Editor

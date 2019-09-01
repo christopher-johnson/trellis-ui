@@ -21,10 +21,8 @@ const renderResource = (identifier = '', contentType = '', content) => {
   }
 }
 
-const NonRDFSource = ({identifier, contentType, content}) => (
+export const NonRDFSource = ({identifier, contentType, content}) => (
   <section id="ldpNonRDFSource">
     { renderResource(identifier, contentType, content) }
   </section>
 )
-
-export default NonRDFSource

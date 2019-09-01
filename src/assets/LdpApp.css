@@ -1,17 +1,10 @@
 .LdpApp {
-  text-align: center;
+  text-align: left;
 }
 
 .LdpApp-logo {
   animation: LdpApp-logo-spin infinite 20s linear;
   height: 30px;
-}
-
-header {
-  background-color: #222;
-  height: 50px;
-  padding: 20px;
-  color: white;
 }
 
 .LdpApp-title {
